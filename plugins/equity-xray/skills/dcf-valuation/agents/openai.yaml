@@ -1,0 +1,13 @@
+interface:
+  display_name: DCF估值
+  short_description: 以明确假设与现金流驱动估值，检验敏感性及企业到股权价值桥接
+  default_prompt: 使用 $dcf-valuation 完成这项上市公司研究任务。
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

@@ -1,0 +1,13 @@
+interface:
+  display_name: 上市公司财报分析
+  short_description: 通过图表与三表验证识别财务异常，逐层拆解并解释经营和战略原因
+  default_prompt: 使用 $financial-statement-analysis 分析这家公司过去五年的财务表现。
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

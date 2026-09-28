@@ -1,0 +1,40 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "equity-xray",
+  "version": "0.1.0",
+  "description": "Evidence-first equity research that turns public filings into traceable financial diagnostics, comps, DCF and model updates.",
+  "author": {
+    "name": "yibai435-star"
+  },
+  "homepage": "https://github.com/yibai435-star/EquityXRay",
+  "repository": "https://github.com/yibai435-star/EquityXRay",
+  "license": "MIT",
+  "keywords": [
+    "equity-research",
+    "financial-analysis",
+    "earnings",
+    "comps",
+    "dcf"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "EquityXRay",
+        "shortDescription": "上市公司财务、业绩、同行、DCF与模型更新",
+        "longDescription": "降低研究门槛，不降低研究标准：从财务体检出发递归拆解异常，并衔接季度业绩、同行比较、DCF估值和模型更新。",
+        "developerName": "yibai435-star",
+        "category": "Productivity",
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "defaultPrompt": [
+          "分析这家公司过去五年的财务表现。",
+          "深挖这家公司的存货和现金流异常。",
+          "比较这两家公司的经营模式。"
+        ],
+        "brandColor": "#0B6E69"
+      }
+    }
+  }
+}

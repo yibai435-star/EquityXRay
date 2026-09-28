@@ -1,0 +1,6 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "equity-research",
+  "version": "0.1.0",
+  "description": "Listed-company financial diagnostics with independent earnings, comps, DCF and model-update workflows."
+}

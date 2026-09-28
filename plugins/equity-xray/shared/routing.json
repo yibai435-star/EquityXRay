@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "modules": [
+    {
+      "name": "financial-statement-analysis",
+      "intent": "multi_year_financial_health_or_metric_deep_dive",
+      "modes": [
+        "full",
+        "quick",
+        "deep"
+      ],
+      "status": "implemented"
+    },
+    {
+      "name": "earnings-analysis",
+      "intent": "quarterly_results",
+      "modes": [
+        "earnings"
+      ],
+      "status": "workflow_scaffold"
+    },
+    {
+      "name": "comps-analysis",
+      "intent": "peer_operating_or_valuation_comparison",
+      "modes": [
+        "operating",
+        "valuation"
+      ],
+      "status": "workflow_scaffold"
+    },
+    {
+      "name": "dcf-valuation",
+      "intent": "discounted_cashflow_valuation",
+      "modes": [
+        "dcf"
+      ],
+      "status": "workflow_scaffold"
+    },
+    {
+      "name": "model-update",
+      "intent": "existing_model_revision",
+      "modes": [
+        "update"
+      ],
+      "status": "workflow_scaffold"
+    }
+  ],
+  "priority": [
+    "explicit_user_sequence",
+    "existing_model_revision",
+    "peer_comparison",
+    "dcf_valuation",
+    "quarterly_results",
+    "financial_health"
+  ],
+  "unknown": "clarify_after_useful_work",
+  "semantic_router": "Interpret intent, negation, context and authorized scope; script is a bounded regression helper, not the semantic authority.",
+  "regression_rules": [
+    {
+      "skill": "model-update",
+      "mode": "update",
+      "pattern": "(更新|修订|修改).*(模型|预测|model)|update.*model"
+    },
+    {
+      "skill": "comps-analysis",
+      "mode": "operating",
+      "pattern": "(对比|比较|vs|经营模式差异|谁的经营模式|同行估值|comps)",
+      "mode_overrides": [
+        {
+          "pattern": "估值|倍数|multiple",
+          "mode": "valuation"
+        }
+      ]
+    },
+    {
+      "skill": "dcf-valuation",
+      "mode": "dcf",
+      "pattern": "DCF|贴现现金流|现金流折现|做.*估值|估值.*公司"
+    },
+    {
+      "skill": "earnings-analysis",
+      "mode": "earnings",
+      "pattern": "最新季度|季度业绩|Q[1-4].*(发布|分析|业绩)|季报点评"
+    },
+    {
+      "skill": "financial-statement-analysis",
+      "mode": "full",
+      "pattern": "分析|财报|财务质量|三张表|三表|深挖|过去.*年",
+      "mode_overrides": [
+        {
+          "pattern": "深挖",
+          "mode": "deep"
+        },
+        {
+          "pattern": "快速",
+          "mode": "quick"
+        }
+      ]
+    }
+  ]
+}

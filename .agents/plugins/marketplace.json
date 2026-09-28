@@ -1,0 +1,20 @@
+{
+  "name": "equity-xray-plugins",
+  "interface": {
+    "displayName": "EquityXRay Plugins"
+  },
+  "plugins": [
+    {
+      "name": "equity-xray",
+      "source": {
+        "source": "local",
+        "path": "./plugins/equity-xray"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

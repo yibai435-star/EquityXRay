@@ -1,0 +1,269 @@
+{
+  "schema_version": 1,
+  "metadata": {
+    "company": "待填写",
+    "as_of": "YYYY-MM-DD",
+    "analysis_purpose": "上市公司财务研究"
+  },
+  "sources": [],
+  "records": [
+    {
+      "id": "company_FY_year",
+      "company": "待填写",
+      "ticker": "待填写",
+      "period_start": "YYYY-01-01",
+      "period_end": "YYYY-12-31",
+      "period_type": "FY",
+      "currency": "CNY",
+      "unit": "百万元",
+      "scope": "consolidated",
+      "accounting_standard": "待核实",
+      "values": {
+        "revenue": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "cogs": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "net_profit": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "parent_profit": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "adjusted_parent_profit": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "minority_profit": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "selling_expense": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "admin_expense": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "rd_expense": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "financial_expense": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "profit_before_tax": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "income_tax": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "interest_expense": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "total_assets_open": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "total_assets_close": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "total_liabilities_close": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "total_equity_open": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "total_equity_close": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "parent_equity_open": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "parent_equity_close": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "ar_open": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "ar_close": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "inventory_open": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "inventory_close": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "trade_payables_open": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "trade_payables_close": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "fixed_assets_open": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "fixed_assets_close": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "purchases": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "interest_debt_close": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "available_cash_close": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "cash_equiv_open": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "cash_equiv_close": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "goodwill_close": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "cip_close": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "cfo": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "cfi": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "cff": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "fx_cash_change": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        },
+        "capex_cash": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": ""
+        }
+      }
+    }
+  ],
+  "adjustments": [],
+  "peers": [],
+  "claims": [],
+  "accounting_notes": []
+}

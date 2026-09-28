@@ -1,0 +1,13 @@
+interface:
+  display_name: 同行与经营模式比较
+  short_description: 比较可比公司的业务结构、经营效率与估值，区分两种研究任务
+  default_prompt: 使用 $comps-analysis 完成这项上市公司研究任务。
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

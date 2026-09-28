@@ -1,0 +1,516 @@
+{
+  "mode": "full",
+  "company": "待填写",
+  "ticker": "待填写",
+  "period": "待填写",
+  "as_of": "YYYY-MM-DD",
+  "basis": "合并口径；币种/单位；准则；报告版本",
+  "workpapers": "workpapers/analysis.json",
+  "summary": {
+    "conclusions": [],
+    "indicators": [],
+    "anomalies": [],
+    "anomaly_note": "",
+    "questions": []
+  },
+  "sections": [
+    {
+      "id": "roe",
+      "title": "1. ROE与杜邦分析",
+      "conclusions": [
+        {
+          "text": "填写有证据的结论",
+          "kind": "财务事实",
+          "refs": [],
+          "source_ids": []
+        }
+      ],
+      "charts": [
+        {
+          "title": "填写能被证据支持的图题",
+          "type": "line",
+          "unit": "%",
+          "labels": [],
+          "series": [
+            {
+              "name": "公司",
+              "refs": [],
+              "scale": 100
+            }
+          ],
+          "conclusion": {
+            "text": "填写有证据的结论",
+            "kind": "财务事实",
+            "refs": [],
+            "source_ids": []
+          },
+          "how_to_read": "说明轴和系列",
+          "findings": [
+            {
+              "text": "填写有证据的结论",
+              "kind": "财务事实",
+              "refs": [],
+              "source_ids": []
+            }
+          ],
+          "interpretation": {
+            "text": "填写证据与替代解释",
+            "kind": "分析推断",
+            "refs": [],
+            "source_ids": []
+          },
+          "drilldown": {
+            "needed": true,
+            "next": "填写下一层具体指标"
+          }
+        }
+      ],
+      "status": "数据不足",
+      "status_reason": "待核实",
+      "drilldown": []
+    },
+    {
+      "id": "revenue",
+      "title": "2. 收入增长与业务结构",
+      "conclusions": [
+        {
+          "text": "填写有证据的结论",
+          "kind": "财务事实",
+          "refs": [],
+          "source_ids": []
+        }
+      ],
+      "charts": [
+        {
+          "title": "填写能被证据支持的图题",
+          "type": "line",
+          "unit": "%",
+          "labels": [],
+          "series": [
+            {
+              "name": "公司",
+              "refs": [],
+              "scale": 100
+            }
+          ],
+          "conclusion": {
+            "text": "填写有证据的结论",
+            "kind": "财务事实",
+            "refs": [],
+            "source_ids": []
+          },
+          "how_to_read": "说明轴和系列",
+          "findings": [
+            {
+              "text": "填写有证据的结论",
+              "kind": "财务事实",
+              "refs": [],
+              "source_ids": []
+            }
+          ],
+          "interpretation": {
+            "text": "填写证据与替代解释",
+            "kind": "分析推断",
+            "refs": [],
+            "source_ids": []
+          },
+          "drilldown": {
+            "needed": true,
+            "next": "填写下一层具体指标"
+          }
+        }
+      ],
+      "status": "数据不足",
+      "status_reason": "待核实",
+      "drilldown": []
+    },
+    {
+      "id": "gross_margin",
+      "title": "3. 毛利率与产品盈利能力",
+      "conclusions": [
+        {
+          "text": "填写有证据的结论",
+          "kind": "财务事实",
+          "refs": [],
+          "source_ids": []
+        }
+      ],
+      "charts": [
+        {
+          "title": "填写能被证据支持的图题",
+          "type": "line",
+          "unit": "%",
+          "labels": [],
+          "series": [
+            {
+              "name": "公司",
+              "refs": [],
+              "scale": 100
+            }
+          ],
+          "conclusion": {
+            "text": "填写有证据的结论",
+            "kind": "财务事实",
+            "refs": [],
+            "source_ids": []
+          },
+          "how_to_read": "说明轴和系列",
+          "findings": [
+            {
+              "text": "填写有证据的结论",
+              "kind": "财务事实",
+              "refs": [],
+              "source_ids": []
+            }
+          ],
+          "interpretation": {
+            "text": "填写证据与替代解释",
+            "kind": "分析推断",
+            "refs": [],
+            "source_ids": []
+          },
+          "drilldown": {
+            "needed": true,
+            "next": "填写下一层具体指标"
+          }
+        }
+      ],
+      "status": "数据不足",
+      "status_reason": "待核实",
+      "drilldown": []
+    },
+    {
+      "id": "profit",
+      "title": "4. 费用结构与净利润",
+      "conclusions": [
+        {
+          "text": "填写有证据的结论",
+          "kind": "财务事实",
+          "refs": [],
+          "source_ids": []
+        }
+      ],
+      "charts": [
+        {
+          "title": "填写能被证据支持的图题",
+          "type": "line",
+          "unit": "%",
+          "labels": [],
+          "series": [
+            {
+              "name": "公司",
+              "refs": [],
+              "scale": 100
+            }
+          ],
+          "conclusion": {
+            "text": "填写有证据的结论",
+            "kind": "财务事实",
+            "refs": [],
+            "source_ids": []
+          },
+          "how_to_read": "说明轴和系列",
+          "findings": [
+            {
+              "text": "填写有证据的结论",
+              "kind": "财务事实",
+              "refs": [],
+              "source_ids": []
+            }
+          ],
+          "interpretation": {
+            "text": "填写证据与替代解释",
+            "kind": "分析推断",
+            "refs": [],
+            "source_ids": []
+          },
+          "drilldown": {
+            "needed": true,
+            "next": "填写下一层具体指标"
+          }
+        }
+      ],
+      "status": "数据不足",
+      "status_reason": "待核实",
+      "drilldown": []
+    },
+    {
+      "id": "turnover",
+      "title": "5. 资产周转效率",
+      "conclusions": [
+        {
+          "text": "填写有证据的结论",
+          "kind": "财务事实",
+          "refs": [],
+          "source_ids": []
+        }
+      ],
+      "charts": [
+        {
+          "title": "填写能被证据支持的图题",
+          "type": "line",
+          "unit": "%",
+          "labels": [],
+          "series": [
+            {
+              "name": "公司",
+              "refs": [],
+              "scale": 100
+            }
+          ],
+          "conclusion": {
+            "text": "填写有证据的结论",
+            "kind": "财务事实",
+            "refs": [],
+            "source_ids": []
+          },
+          "how_to_read": "说明轴和系列",
+          "findings": [
+            {
+              "text": "填写有证据的结论",
+              "kind": "财务事实",
+              "refs": [],
+              "source_ids": []
+            }
+          ],
+          "interpretation": {
+            "text": "填写证据与替代解释",
+            "kind": "分析推断",
+            "refs": [],
+            "source_ids": []
+          },
+          "drilldown": {
+            "needed": true,
+            "next": "填写下一层具体指标"
+          }
+        }
+      ],
+      "status": "数据不足",
+      "status_reason": "待核实",
+      "drilldown": []
+    },
+    {
+      "id": "leverage",
+      "title": "6. 资产负债与财务杠杆",
+      "conclusions": [
+        {
+          "text": "填写有证据的结论",
+          "kind": "财务事实",
+          "refs": [],
+          "source_ids": []
+        }
+      ],
+      "charts": [
+        {
+          "title": "填写能被证据支持的图题",
+          "type": "line",
+          "unit": "%",
+          "labels": [],
+          "series": [
+            {
+              "name": "公司",
+              "refs": [],
+              "scale": 100
+            }
+          ],
+          "conclusion": {
+            "text": "填写有证据的结论",
+            "kind": "财务事实",
+            "refs": [],
+            "source_ids": []
+          },
+          "how_to_read": "说明轴和系列",
+          "findings": [
+            {
+              "text": "填写有证据的结论",
+              "kind": "财务事实",
+              "refs": [],
+              "source_ids": []
+            }
+          ],
+          "interpretation": {
+            "text": "填写证据与替代解释",
+            "kind": "分析推断",
+            "refs": [],
+            "source_ids": []
+          },
+          "drilldown": {
+            "needed": true,
+            "next": "填写下一层具体指标"
+          }
+        }
+      ],
+      "status": "数据不足",
+      "status_reason": "待核实",
+      "drilldown": []
+    },
+    {
+      "id": "cash_flow",
+      "title": "7. 现金流与利润质量",
+      "conclusions": [
+        {
+          "text": "填写有证据的结论",
+          "kind": "财务事实",
+          "refs": [],
+          "source_ids": []
+        }
+      ],
+      "charts": [
+        {
+          "title": "填写能被证据支持的图题",
+          "type": "line",
+          "unit": "%",
+          "labels": [],
+          "series": [
+            {
+              "name": "公司",
+              "refs": [],
+              "scale": 100
+            }
+          ],
+          "conclusion": {
+            "text": "填写有证据的结论",
+            "kind": "财务事实",
+            "refs": [],
+            "source_ids": []
+          },
+          "how_to_read": "说明轴和系列",
+          "findings": [
+            {
+              "text": "填写有证据的结论",
+              "kind": "财务事实",
+              "refs": [],
+              "source_ids": []
+            }
+          ],
+          "interpretation": {
+            "text": "填写证据与替代解释",
+            "kind": "分析推断",
+            "refs": [],
+            "source_ids": []
+          },
+          "drilldown": {
+            "needed": true,
+            "next": "填写下一层具体指标"
+          }
+        }
+      ],
+      "status": "数据不足",
+      "status_reason": "待核实",
+      "drilldown": []
+    },
+    {
+      "id": "anomalies",
+      "title": "8. 财务异常扫描",
+      "conclusions": [
+        {
+          "text": "填写有证据的结论",
+          "kind": "财务事实",
+          "refs": [],
+          "source_ids": []
+        }
+      ],
+      "charts": [
+        {
+          "title": "填写能被证据支持的图题",
+          "type": "line",
+          "unit": "%",
+          "labels": [],
+          "series": [
+            {
+              "name": "公司",
+              "refs": [],
+              "scale": 100
+            }
+          ],
+          "conclusion": {
+            "text": "填写有证据的结论",
+            "kind": "财务事实",
+            "refs": [],
+            "source_ids": []
+          },
+          "how_to_read": "说明轴和系列",
+          "findings": [
+            {
+              "text": "填写有证据的结论",
+              "kind": "财务事实",
+              "refs": [],
+              "source_ids": []
+            }
+          ],
+          "interpretation": {
+            "text": "填写证据与替代解释",
+            "kind": "分析推断",
+            "refs": [],
+            "source_ids": []
+          },
+          "drilldown": {
+            "needed": true,
+            "next": "填写下一层具体指标"
+          }
+        }
+      ],
+      "status": "数据不足",
+      "status_reason": "待核实",
+      "drilldown": []
+    },
+    {
+      "id": "business_strategy",
+      "title": "9. 财务变化与业务战略",
+      "conclusions": [
+        {
+          "text": "填写有证据的结论",
+          "kind": "财务事实",
+          "refs": [],
+          "source_ids": []
+        }
+      ],
+      "charts": [
+        {
+          "title": "填写能被证据支持的图题",
+          "type": "line",
+          "unit": "%",
+          "labels": [],
+          "series": [
+            {
+              "name": "公司",
+              "refs": [],
+              "scale": 100
+            }
+          ],
+          "conclusion": {
+            "text": "填写有证据的结论",
+            "kind": "财务事实",
+            "refs": [],
+            "source_ids": []
+          },
+          "how_to_read": "说明轴和系列",
+          "findings": [
+            {
+              "text": "填写有证据的结论",
+              "kind": "财务事实",
+              "refs": [],
+              "source_ids": []
+            }
+          ],
+          "interpretation": {
+            "text": "填写证据与替代解释",
+            "kind": "分析推断",
+            "refs": [],
+            "source_ids": []
+          },
+          "drilldown": {
+            "needed": true,
+            "next": "填写下一层具体指标"
+          }
+        }
+      ],
+      "status": "数据不足",
+      "status_reason": "待核实",
+      "drilldown": []
+    }
+  ],
+  "appendix_tables": [],
+  "questions": [],
+  "extra_data": []
+}

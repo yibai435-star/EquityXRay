@@ -1,0 +1,13 @@
+interface:
+  display_name: 财务模型更新
+  short_description: 基于最新披露更新已有模型，保留公式结构并追踪数据与假设变更
+  default_prompt: 使用 $model-update 完成这项上市公司研究任务。
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
