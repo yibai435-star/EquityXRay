@@ -92,20 +92,21 @@ terms必须完整、符号±1，target是原始披露字段；未披露项不擅
 - questions是3–8个最终待验证问题；尽量给需取资料和区分假说的方法。
 
 
-### 主报告contract_version=2（新报告默认）
-full/quick必须填写`target_ticker`、`target_record_ids`（默认5个连续FY，至少3年，资料不足允许明确history_gap）及`main_report_coverage`。每项对象是status（available/partial/unavailable/not_applicable）、refs（底稿指标ID）、reason（缺失/不适用/部分缺失原因）。refs按期间覆盖目标历史；不可用缺口绕过已有指标。
-必需键：roe_adjusted、revenue、sales_cash_ratio、gross_margin、net_margin、net_profit_cash_content、adjusted_profit_share、asset_turnover、industry_turnover、cash_equiv_to_interest_debt、cfo、simple_fcf、capex_cash、gross_margin_peers、asset_turnover_peers。
-同行两项refs应对应同一共同完整财年的3–5家非目标公司指标；不足时status=partial/unavailable，写筛选依据及具体缺口。industry_turnover标明2C存货/2B应收/混合/N/A，不能只写总资产周转。
-`roe_assessment`含`workpaper`（assess_adjusted_roe.py的JSON路径）、`quality`（有证据的陈述对象）、`stability_comment`（研究陈述）。工作底稿依赖同一analysis.json，渲染时重新计算并核对，分数为空必须展示原因。评估脚本只生成位置分和历史统计，经营质量由研究者解释。
-旧报告仅为复现可显式contract_version=1；不能用于新报告交付。通用报告工具可自行渲染，但必须执行同等覆盖检查。
+### 主报告contract_version=3（新报告默认）
+full/quick必须填写`business_model`（b2c/b2b/mixed/service/financial，按实际收入模式选择）、`target_ticker`、`target_record_ids`（默认5个连续FY，至少3年，资料不足允许明确history_gap）及`main_report_coverage`。已采集但因口径不可比排除的同行，逐条填写excluded_refs（指标ID→具体排除原因），报告附录显示排除记录；partial保留所有已知可用年度，不能只截最新一年。每项对象是status（available/partial/unavailable/not_applicable）、refs（底稿指标ID）、reason（缺失/不适用/部分缺失原因）。refs按期间覆盖目标历史；不可用缺口绕过已有指标。
+必需键：roe_parent、roe_adjusted、dupont_adjusted、dupont_drivers、net_profit、parent_profit、adjusted_parent_profit、cash_equiv_close、interest_debt_close、revenue、sales_cash_ratio、gross_margin、net_margin、net_profit_cash_content、adjusted_profit_share、asset_turnover、industry_turnover、cash_equiv_to_interest_debt、cfo、simple_fcf、capex_cash、gross_margin_peers、asset_turnover_peers。
+同行两项refs应对应同一共同完整财年的3–5家非目标公司指标；不足时status=partial/unavailable，写筛选依据及具体缺口。industry_turnover还填focus=inventory/receivables/both/not_applicable并给reason；2C优先存货、2B优先应收，混合模式查两者，服务/金融不适用时解释行业意义。dupont_drivers包含adjusted_parent_margin、asset_turnover、parent_equity_multiplier三个指标的历史引用；缺扣非数据可部分保留周转与乘数，但不能称完整扣非拆解。
+`roe_assessment`含`workpaper`（assess_adjusted_roe.py的JSON路径）、`quality`（有证据的陈述对象）、`stability_comment`（研究陈述）。主报告超过5年时评估默认取最近5年。工作底稿依赖同一analysis.json，渲染时重新计算并核对，分数为空必须展示原因。评估脚本只生成位置分和历史统计，经营质量由研究者解释。
+旧报告仅为复现可显式contract_version=1/2；不能用于新报告交付。v2迁移到v3时新增business_model、industry_turnover.focus及金额/杜邦覆盖项，并补齐对应章节图的真实指标引用；原有工作底稿schema_version=1无需迁移，重算评估JSON即可。通用报告工具可自行渲染，但必须先运行validate_main_report.py；其不生成图或文档，只核对数据覆盖、期间、图引用和评分。报告/图表业务结论与视觉可读性仍需人工复核。
 
-报告渲染器只验证结构/引用/部分数字，不自动判断数据可比性、因果、业务风险，也不能自动确认摘要1页。完成后按质量门人工复核与视觉检查。
+契约v3复用计算引擎从底稿原始records重算，并核对缓存的金额、指标、依赖、来源及检查状态；不能手工改缓存数值绕过验证。验证器不自动确认来源真伪、数据可比性、因果或业务风险，也不能自动确认摘要1页。完成后按质量门人工复核与视觉检查。
 
 ## 4. 运行
 ```bash
 python3 <skill-dir>/scripts/calculate_financial_ratios.py input.json --out workpapers
 python3 <skill-dir>/scripts/dupont_analysis.py workpapers/analysis.json --out workpapers/dupont.json
 python3 <skill-dir>/scripts/assess_adjusted_roe.py workpapers/analysis.json --target 公司代码 --peers 同行代码1 同行代码2 同行代码3 --out workpapers/roe-assessment.json
+python3 <skill-dir>/scripts/validate_main_report.py report.json
 python3 <skill-dir>/scripts/render_report.py report.json --out 公司_期间_财务研究报告.html
 python3 <skill-dir>/scripts/selftest.py
 python3 <skill-dir>/scripts/selftest_main_report.py

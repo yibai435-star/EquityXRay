@@ -11,14 +11,14 @@ def route_request(request):
     shared=Path(resolve_modules()['shared'])
     spec=json.loads((shared/'routing.json').read_text(encoding='utf-8'))
     # Remove explicit negative clauses in the supported expression set.
-    clauses=re.split(r'[，,。；;]',request)
-    active=[c for c in clauses if not re.match(r'^\s*(不要|不用|不需要|别)',c)]
-    steps=re.split(r'然后|再(?=做|分析|更新)|接着', '，'.join(active))
-    result=[]
+    clauses=re.split(r'[，,。；;]|但是|但',request)
+    active=[c for c in clauses if not re.match(spec['negative_clause_pattern'],c)]
+    steps=re.split(spec['sequence_pattern'], '，'.join(active))
+    result=[]; support=[]
     for step in steps:
         chosen=None
         rules = spec['regression_rules']
-        if re.search(r'(财报分析报告|财务分析报告|财务体检|过去.*年.*财报)', step) and not re.search(r'DCF|更新.*模型', step, re.I):
+        if (re.search(spec['main_report_pattern'], step) or re.search(spec['main_report_with_support_pattern'], step, re.I)) and not re.search(r'(更新|修订|修改).*模型', step):
             rules = sorted(rules, key=lambda r: r['skill'] != 'financial-statement-analysis')
         for rule in rules:
             if re.search(rule['pattern'],step,re.I):
@@ -26,10 +26,15 @@ def route_request(request):
                 for override in rule.get('mode_overrides',[]):
                     if re.search(override['pattern'],step,re.I):mode=override['mode'];break
                 chosen={'skill':rule['skill'],'mode':mode};break
-        if chosen and (not result or result[-1]!=chosen):result.append(chosen)
+        if chosen and (not result or result[-1]!=chosen):
+            result.append(chosen)
+            if chosen['skill']=='financial-statement-analysis' and chosen['mode']!='deep':
+                for rule in spec['embedded_support']:
+                    if re.search(rule['pattern'],step,re.I):
+                        support.append({'step':len(result)-1, **{k:v for k,v in rule.items() if k!='pattern'},'delivery':'embedded_in_main_report'})
         elif step.strip() and not chosen:
-            return {'status':'needs_semantic_routing','workflow':result,'unresolved':step,'note':'Do not infer completeness from this bounded parser.'}
-    return {'status':'matched' if result else 'needs_semantic_routing','workflow':result}
+            return {'status':'needs_semantic_routing','workflow':result,'support':support,'unresolved':step,'note':'Do not infer completeness from this bounded parser.'}
+    return {'status':'matched' if result else 'needs_semantic_routing','workflow':result,'support':support}
 
 
 def main():

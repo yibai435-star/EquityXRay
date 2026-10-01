@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "equity-xray",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Understand a listed company through a traceable multi-year financial report, with adjusted ROE, cash quality and peer comparisons.",
   "author": {
     "name": "yibai435-star"

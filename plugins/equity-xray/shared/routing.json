@@ -85,7 +85,7 @@
     {
       "skill": "financial-statement-analysis",
       "mode": "full",
-      "pattern": "分析|财报|财务质量|三张表|三表|深挖|过去.*年",
+      "pattern": "分析|财报|财务质量|三张表|三表|深挖|过去.*年|财务体检|财报体检|财务分析|财报分析",
       "mode_overrides": [
         {
           "pattern": "深挖",
@@ -97,5 +97,25 @@
         }
       ]
     }
-  ]
+  ],
+  "main_report_pattern": "财报分析报告|财务分析报告|财务体检|财报体检|过去.*年.*财报|近.*年.*财务",
+  "sequence_pattern": "然后|接着|再(?=给|做|分析|更新|比较|对比)|(?:并且?|同时|以及|和)(?=(?:单独|独立|比较|对比|分析)|(?:给.{0,20}做|做.{0,20})(?:DCF|估值)|更新.{0,20}模型)",
+  "negative_clause_pattern": "^\\s*(?:先|暂时|也)?(?:不要|不用|不需要|无需|不做|别)",
+  "embedded_support": [
+    {
+      "skill": "comps-analysis",
+      "mode": "operating",
+      "pattern": "同行|毛利率|资产周转",
+      "role": "peer_metrics",
+      "invocation": "when_needed"
+    },
+    {
+      "skill": "earnings-analysis",
+      "mode": "earnings",
+      "pattern": "补充.*(?:季度|Q[1-4])|最新季度|季度业绩",
+      "role": "quarterly_supplement",
+      "invocation": "when_needed"
+    }
+  ],
+  "main_report_with_support_pattern": "(?:分析|做|生成).{0,30}(?:财报|财务|三张表).*(?:补充|附带|参考|结合|顺便).*(?:季度|Q[1-4]|同行)"
 }

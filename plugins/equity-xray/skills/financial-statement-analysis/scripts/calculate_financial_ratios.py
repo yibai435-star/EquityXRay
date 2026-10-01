@@ -75,6 +75,12 @@ def validate(data):
             raise ValueError('Invalid period_type')
         if date.fromisoformat(r['period_end']) < date.fromisoformat(r['period_start']):
             raise ValueError('Invalid period dates')
+        if r.get('adjusted_profit_basis', 'unverified') not in ['disclosed_nonrecurring', 'analyst_reconciled', 'unverified', 'non_gaap']:
+            raise ValueError('Invalid adjusted_profit_basis; do not silently reinterpret the label')
+        if r.get('adjustment_policy_id') is not None and not isinstance(r['adjustment_policy_id'], str):
+            raise ValueError('adjustment_policy_id must be a text identifier')
+        if r.get('adjusted_profit_basis') in ['disclosed_nonrecurring', 'analyst_reconciled'] and any(r['values'].get(k, {}).get('value') is not None for k in ['adjusted_parent_profit', 'roe_adjusted_reported']) and not r.get('adjustment_policy_id'):
+            raise ValueError('Verified adjusted-profit data requires a documented adjustment_policy_id')
         if r['scope'] != 'consolidated':
             raise ValueError('Built-in calculator requires consolidated records; handle separate statements explicitly')
         for key, cell in r['values'].items():

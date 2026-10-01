@@ -13,7 +13,7 @@ EquityXRay帮助非专业人士根据公开财报初步了解一家上市公司�
 
 正常指标快速通过；重要异常在主报告识别主要驱动并跨三张表验证，完整递归深挖作为按需任务。财务变化最终回到产品、市场、竞争、运营和战略解释。
 
-## 主报告必查（v0.2.0）
+## 主报告必查（v0.3.0）
 
 | 步骤 | 核心指标与比较 |
 | --- | --- |
@@ -26,6 +26,12 @@ EquityXRay帮助非专业人士根据公开财报初步了解一家上市公司�
 | 综合评估 | 扣非ROE分数、质量（赚钱机制）、稳定性（近五年变化） |
 
 分数是透明的固定同行相对位置分，不能替代绝对盈利、质量或稳定性判断。数据不足暂不评分。Non-GAAP不自动等于扣非利润；广义cash position不自动等于现金及等价物；亏损/零利润不能机械解释现金含量。所有重要数据与缺口均可追溯。
+
+## 主报告与专项协作
+
+主报告的首要目标是便于初步了解一家公司的财务情况。同行数据与季度补充可以由专项工作流提供，结果嵌入主报告；明确要求独立季度点评、同行比较、DCF或模型更新时，交付独立成果。组合请求保留用户指定的顺序和交付范围。
+
+新报告使用契约v3：已知历史数据完整保留，部分缺失写明年份；各核心章节引用对应财务指标，同行排除留原因。扣非ROE评分、赚钱机制与稳定性各自说明证据和限制，同行不足不抹掉公司的有效历史。验证脚本复用计算引擎重算底稿，旧v1/v2仅用于历史报告复现。
 
 ## 包含的 Skills
 
@@ -95,6 +101,14 @@ python plugins/equity-xray/skills/financial-statement-analysis/scripts/selftest.
 python plugins/equity-xray/skills/financial-statement-analysis/scripts/selftest_main_report.py
 python plugins/equity-xray/skills/financial-statement-analysis/scripts/selftest_routing.py
 ```
+
+新报告交付前可运行领域验证，使用通用工具生成报告时也复用同一检查：
+
+```bash
+python plugins/equity-xray/skills/financial-statement-analysis/scripts/validate_main_report.py report.json
+```
+
+验证覆盖数值复算、期间、数据覆盖、图引用与评分；来源真伪、业务因果、可比性及视觉质量仍需研究者复核。
 
 四个专项Skill提供独立工作流，依赖通用研究与表格能力；项目不宣称连接付费数据库或自带完整实时估值引擎。
 

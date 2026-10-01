@@ -15,7 +15,7 @@ description: 生成上市公司近3–5年财务初步诊断报告，以扣非RO
 
 ## 3. Core Workflow
 **扣非ROE/杜邦→收入及收现→毛利率及同行→净利润及现金质量→资产周转及同行/行业分支→财务杠杆→现金流验证→异常简扫→业务解释→扣非ROE综合评估。**
-完整与快速报告必须先读取[主报告必选指标](references/main-report-contract.md)；确定性公式只维护于[指标定义](references/metric-definitions.md)。默认每个核心指标展示近3–5年，毛利率和总资产周转率均比较3–5家同行；具体缺口如实标记。
+完整与快速报告先按[执行与协作](references/execution-playbook.md)界定数据状态和研究边界，再读取[主报告必选指标](references/main-report-contract.md)；确定性公式只维护于[指标定义](references/metric-definitions.md)。默认每个核心指标展示近3–5年，毛利率和总资产周转率均比较3–5家同行；具体缺口如实标记。
 先按[数据约定](../../shared/data-conventions/conventions.md)取数和溯源，核对[会计调整](references/accounting-adjustments.md)与[跨表验证](references/cross-statement-validation.md)，再解释变化。
 按问题读取[指标树](references/metric-tree.md)、[异常识别](references/anomaly-detection.md)、[同行选择](references/peer-comparison.md)、[图表选择](references/chart-guide.md)、[业务解释](references/business-interpretation.md)。特殊行业另读[行业适配](references/sector-adaptations.md)。
 确定性计算复用`scripts/calculate_financial_ratios.py`、`scripts/dupont_analysis.py`；综合评估按[评估规则](references/roe-assessment.md)调用`scripts/assess_adjusted_roe.py`。接口见[计算契约](references/io-contract.md)，执行交给[通用能力](references/runtime-integration.md)。

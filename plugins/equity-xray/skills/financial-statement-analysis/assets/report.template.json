@@ -437,7 +437,7 @@
   "appendix_tables": [],
   "questions": [],
   "extra_data": [],
-  "contract_version": 2,
+  "contract_version": 3,
   "target_ticker": "待填写",
   "target_record_ids": [],
   "main_report_coverage": {
@@ -484,7 +484,8 @@
     "industry_turnover": {
       "status": "unavailable",
       "refs": [],
-      "reason": "待获取并核实数据，不能交付占位文本"
+      "reason": "待获取并核实数据，不能交付占位文本",
+      "focus": "inventory"
     },
     "cash_equiv_to_interest_debt": {
       "status": "unavailable",
@@ -515,6 +516,46 @@
       "status": "unavailable",
       "refs": [],
       "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "roe_parent": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "dupont_adjusted": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "net_profit": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "parent_profit": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "adjusted_parent_profit": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "cash_equiv_close": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "interest_debt_close": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "dupont_drivers": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待核实扣非杜邦三因子，不能交付占位文本"
     }
   },
   "roe_assessment": {
@@ -531,5 +572,6 @@
       "refs": [],
       "source_ids": []
     }
-  }
+  },
+  "business_model": "b2c"
 }
