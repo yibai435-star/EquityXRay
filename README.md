@@ -3,21 +3,35 @@
 > **See beyond the numbers.**  
 > **降低研究门槛，不降低研究标准。**
 
-An open-source equity research plugin for ChatGPT Work, ChatGPT Desktop, and Codex. Turn public filings into evidence-backed financial diagnostics, business insights, peer comparisons, DCF valuations, and model updates.
+An open-source equity research workflow plugin for ChatGPT Work, ChatGPT Desktop, and Codex. Start with a chart-led financial report to understand a listed company, then use specialist workflows when a question needs deeper research.
 
-EquityXRay把长期财务体检与季度点评、同行比较、DCF、模型更新拆成五个可独立触发、又能共享底稿的工作流。它不会机械复述财报，而是把公开披露转化为可验证、可追溯、可继续深挖的上市公司研究结论。
+EquityXRay帮助非专业人士根据公开财报初步了解一家上市公司。首要交付是近3–5年的带图财务分析报告：看增长有没有收到现金、产品赚不赚钱、资产是否有效使用、利润是否转成现金，以及股东回报来自哪里。需要深入研究时，再调用季度点评、同行比较、DCF或模型更新；主报告也可以按需要调用专项工作流并复用底稿。
 
 ## 核心方法
 
 财报分析遵循：先总后分、异常优先、图表驱动、跨表验证。
 
-正常指标快速通过；异常指标沿指标树递归拆解，并用资产负债表、利润表、现金流量表及业务证据交叉验证。财务变化最终回到产品、市场、竞争、运营和战略解释。
+正常指标快速通过；重要异常在主报告识别主要驱动并跨三张表验证，完整递归深挖作为按需任务。财务变化最终回到产品、市场、竞争、运营和战略解释。
+
+## 主报告必查（v0.2.0）
+
+| 步骤 | 核心指标与比较 |
+| --- | --- |
+| 股东回报 | 扣非ROE与普通ROE分列、扣非杜邦；近3–5年，默认5年 |
+| 收入增长 | 收入、YoY/CAGR、销售实际收现/营业收入 |
+| 产品盈利 | 毛利率历史＋3–5家可比同行 |
+| 净利润质量 | 销售净利率、CFO/合并净利润、扣非归母/归母净利润 |
+| 资产效率 | 总资产周转率历史＋3–5家同行；2C优先存货、2B优先应收周转 |
+| 债务覆盖 | 现金及现金等价物/有息债务；经营负债与融资负债区分 |
+| 综合评估 | 扣非ROE分数、质量（赚钱机制）、稳定性（近五年变化） |
+
+分数是透明的固定同行相对位置分，不能替代绝对盈利、质量或稳定性判断。数据不足暂不评分。Non-GAAP不自动等于扣非利润；广义cash position不自动等于现金及等价物；亏损/零利润不能机械解释现金含量。所有重要数据与缺口均可追溯。
 
 ## 包含的 Skills
 
 | Skill | 用途 |
 | --- | --- |
-| `financial-statement-analysis` | 3–5年或更长周期的财务表现、异常和业务解释 |
+| `financial-statement-analysis` | 首要入口：带图财务体检与扣非ROE评估；明确请求时支持独立指标深挖 |
 | `earnings-analysis` | 最新或指定季度业绩、预期和指引差异 |
 | `comps-analysis` | 经营模式、竞争定位或同行估值比较 |
 | `dcf-valuation` | DCF预测、WACC、终值、桥接和敏感性 |
@@ -71,6 +85,18 @@ plugins/equity-xray/
 │   └── model-update/
 └── shared/
 ```
+
+## 可复核计算
+
+核心Skill的`scripts/`包含财务比率、普通/扣非杜邦、扣非ROE同行位置及稳定性统计。分析决策由Skill负责，计算由脚本复算，取数、绘图和文件生成复用环境通用能力。
+
+```bash
+python plugins/equity-xray/skills/financial-statement-analysis/scripts/selftest.py
+python plugins/equity-xray/skills/financial-statement-analysis/scripts/selftest_main_report.py
+python plugins/equity-xray/skills/financial-statement-analysis/scripts/selftest_routing.py
+```
+
+四个专项Skill提供独立工作流，依赖通用研究与表格能力；项目不宣称连接付费数据库或自带完整实时估值引擎。
 
 ## License
 

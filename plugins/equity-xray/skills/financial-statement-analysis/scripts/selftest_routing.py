@@ -3,6 +3,8 @@ import json
 from route_request import route_request
 
 CASES=[
+ ('做XX财务分析报告，毛利率和资产周转率要同行比较',[('financial-statement-analysis','full')]),
+ ('做XX财务分析报告并补充最新季度业绩',[('financial-statement-analysis','full')]),
  ('分析XX公司过去5年财报',[('financial-statement-analysis','full')]),
  ('深挖XX公司存货问题',[('financial-statement-analysis','deep')]),
  ('XX公司最新季度业绩怎么样',[('earnings-analysis','earnings')]),

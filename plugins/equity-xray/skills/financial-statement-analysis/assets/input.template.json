@@ -258,8 +258,16 @@
           "source_ids": [],
           "locator": "",
           "original_label": ""
+        },
+        "sales_cash_received": {
+          "value": null,
+          "source_ids": [],
+          "locator": "",
+          "original_label": "销售商品、提供劳务收到的现金"
         }
-      }
+      },
+      "adjusted_profit_basis": "unverified",
+      "adjustment_policy_id": ""
     }
   ],
   "adjustments": [],

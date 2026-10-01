@@ -27,14 +27,14 @@ def shapley(before, after):
 def analyze_dupont(data, basis='both'):
     if any(c['status'] == 'FAIL' for c in data.get('checks', [])):
         raise ValueError('Resolve failed workpaper checks before DuPont attribution')
-    modes = ['total','parent'] if basis == 'both' else [basis]
-    if not all(b in ['total','parent'] for b in modes):
-        raise ValueError('basis must be total, parent or both')
+    modes = ['total','parent'] if basis == 'both' else (['total','parent','adjusted_parent'] if basis == 'all' else [basis])
+    if not all(b in ['total','parent','adjusted_parent'] for b in modes):
+        raise ValueError('basis must be total, parent, adjusted_parent, both or all')
     nodes = {m['id']:m for m in data['metrics']}
     records = {r['id']:r for r in data['records']}
     periods, changes = [], []
     for b in modes:
-        keys = ['net_margin' if b=='total' else 'parent_margin', 'asset_turnover',
+        keys = ['net_margin' if b=='total' else ('adjusted_parent_margin' if b=='adjusted_parent' else 'parent_margin'), 'asset_turnover',
                 'equity_multiplier' if b=='total' else 'parent_equity_multiplier']
         def factors(rid):
             refs = [f'{rid}:metric:{k}' for k in keys]
@@ -55,7 +55,10 @@ def analyze_dupont(data, basis='both'):
             if prior not in records or any(records[prior][k]!=r[k] for k in ['ticker','period_type','currency','unit','scope','accounting_standard']):
                 raise ValueError('Incomparable prior record')
             old_refs, old_values=factors(prior)
-            contribution=shapley(old_values,values)
+            comparable_policy = (b != 'adjusted_parent' or
+                                 (r.get('adjustment_policy_id') == records[prior].get('adjustment_policy_id') and
+                                  r.get('adjusted_profit_basis') == records[prior].get('adjusted_profit_basis')))
+            contribution=shapley(old_values,values) if comparable_policy else None
             total_delta=math.prod(values)-math.prod(old_values) if contribution is not None else None
             if contribution is not None and not math.isclose(sum(contribution),total_delta,abs_tol=1e-10):
                 raise ValueError('Contribution sum mismatch')
@@ -68,7 +71,7 @@ def analyze_dupont(data, basis='both'):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('analysis');parser.add_argument('--basis',choices=['total','parent','both'],default='both');parser.add_argument('--out',required=True)
+    parser.add_argument('analysis');parser.add_argument('--basis',choices=['total','parent','adjusted_parent','both','all'],default='all');parser.add_argument('--out',required=True)
     args=parser.parse_args()
     result=analyze_dupont(json.loads(Path(args.analysis).read_text(encoding='utf-8')),args.basis)
     output=Path(args.out);output.parent.mkdir(parents=True,exist_ok=True);output.write_text(json.dumps(result,ensure_ascii=False,indent=2,allow_nan=False),encoding='utf-8')

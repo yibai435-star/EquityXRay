@@ -25,6 +25,7 @@
 ```
 示例只有结构，日期、页码、地址、数值必须来自实际资料。每个非空数必须有source_ids、locator和original_label。原始金额/单位保留，value为已统一币种/单位的数据。来源文件可为真实本地路径/Library文件标识；不可捏造URL。
 
+- 扣非输入必须另带`adjusted_profit_basis`（disclosed_nonrecurring / analyst_reconciled / unverified / non_gaap）及`adjustment_policy_id`；前两者必须附可复核调整政策/税及少数股东桥接，未验证/Non-GAAP不会产生扣非指标。披露加权扣非ROE使用roe_adjusted_reported，自算使用roe_adjusted_parent，严格区分。
 - 一公司一期间一record，同一数据版本；自算使用合并报表。raw记录按字段留来源，派生metrics留formula/dependencies/source_ids，支持全链复算。
 - `prior_record_id`显式指定可比上年记录才计算YoY及杜邦贡献；先人工确认合并范围/准则可比。脚本拒绝错币种、错FY/TTM、非相邻财年；52/53周特殊财年另编透明计算，不强套日期。
 - 可选`day_basis`统一365或实际天数（默认实际）；`rounding_tolerance`是金额单位内的四舍五入勾稽容差，默认0.01，不是业务异常阈值。不能为消除报错而任意放宽。
@@ -35,6 +36,7 @@
 
 | 输入字段 | 含义/约定 |
 |---|---|
+| sales_cash_received | 销售商品、提供劳务收到的现金；未披露填null，不用CFO替代 |
 | revenue, cogs | 收入、营业成本；成本正常为正 |
 | net_profit, parent_profit, adjusted_parent_profit, minority_profit | 合并净利、归母、扣非归母、少数股东损益；可正可负 |
 | selling_expense, admin_expense, rd_expense, financial_expense | 四项费用；按费用方向，财务费用可为负 |
@@ -78,8 +80,8 @@ terms必须完整、符号±1，target是原始披露字段；未披露项不擅
 - 底稿存在FAIL时默认阻止报告生成；只能在确需交付带缺口初稿且明确写`unresolved_check_explanation`时输出，首页展示限制，受影响结论必须降级。
 - mode=full/quick/deep/compare；company/ticker/period/as_of/basis填写报告元数据。
 - 每个研究陈述对象：`{"text":"结论","kind":"财务事实|公司管理层解释|外部证据|分析推断|研究问题|数据限制","refs":["record:metric:gross_margin"],"source_ids":["S1"]}`。事实、公司管理层解释、外部证据、推断必须有证据，推断引用支撑资料不表示因果已证实。
-- summary.conclusions 3–5项、indicators 6–8行（label/ref/scale/unit/change/explanation）、anomalies有证据时2–4项，缺异常用anomaly_note，questions 3–5条。deep/compare可按问题适配长度。
-- full九节id按模板不改顺序；每节conclusions/charts/status/status_reason，异常才drilldown。确实缺数据可用data_gap代替图；不可用其跳过有数据步骤。
+- summary.conclusions 3–5项、indicators按主报告必查指标分组（label/ref/scale/unit/change/explanation）、anomalies有证据时2–4项，缺异常用anomaly_note，questions 3–5条。deep/compare可按问题适配长度。
+- full九节id按模板不改顺序，随后渲染独立扣非ROE评估、待验证问题及附录；每节conclusions/charts/status/status_reason，异常才drilldown。确实缺数据可用data_gap代替图；不可用其跳过有数据步骤。
 - chart共同字段title/conclusion/how_to_read/findings/interpretation/drilldown，其中drilldown={needed:true或false,next:下一层或停止理由}。
 - line/bar/stacked：unit、labels、series=[{name,refs:[数据ID...],scale:1}]。小数率转%时scale=100；不允许独立手填绘图值，渲染从底稿取值。
 - waterfall：unit、steps=[{label,ref,scale:1或-1,kind:total或delta}]；起终点必须勾稽。图宽有限，超过10–12项分为营业利润、税/归母两图或自绘准确SVG，不缩到不可读。
@@ -89,14 +91,25 @@ terms必须完整、符号±1，target是原始披露字段；未披露项不擅
 - appendix_tables是title/columns/rows的表数组，必须覆盖核心历史、同行、公式、口径、一次性调整、同行选择、完整异常扫描状态。来源表和数值检查脚本自动追加，不能替代完整附录。
 - questions是3–8个最终待验证问题；尽量给需取资料和区分假说的方法。
 
+
+### 主报告contract_version=2（新报告默认）
+full/quick必须填写`target_ticker`、`target_record_ids`（默认5个连续FY，至少3年，资料不足允许明确history_gap）及`main_report_coverage`。每项对象是status（available/partial/unavailable/not_applicable）、refs（底稿指标ID）、reason（缺失/不适用/部分缺失原因）。refs按期间覆盖目标历史；不可用缺口绕过已有指标。
+必需键：roe_adjusted、revenue、sales_cash_ratio、gross_margin、net_margin、net_profit_cash_content、adjusted_profit_share、asset_turnover、industry_turnover、cash_equiv_to_interest_debt、cfo、simple_fcf、capex_cash、gross_margin_peers、asset_turnover_peers。
+同行两项refs应对应同一共同完整财年的3–5家非目标公司指标；不足时status=partial/unavailable，写筛选依据及具体缺口。industry_turnover标明2C存货/2B应收/混合/N/A，不能只写总资产周转。
+`roe_assessment`含`workpaper`（assess_adjusted_roe.py的JSON路径）、`quality`（有证据的陈述对象）、`stability_comment`（研究陈述）。工作底稿依赖同一analysis.json，渲染时重新计算并核对，分数为空必须展示原因。评估脚本只生成位置分和历史统计，经营质量由研究者解释。
+旧报告仅为复现可显式contract_version=1；不能用于新报告交付。通用报告工具可自行渲染，但必须执行同等覆盖检查。
+
 报告渲染器只验证结构/引用/部分数字，不自动判断数据可比性、因果、业务风险，也不能自动确认摘要1页。完成后按质量门人工复核与视觉检查。
 
 ## 4. 运行
 ```bash
 python3 <skill-dir>/scripts/calculate_financial_ratios.py input.json --out workpapers
 python3 <skill-dir>/scripts/dupont_analysis.py workpapers/analysis.json --out workpapers/dupont.json
+python3 <skill-dir>/scripts/assess_adjusted_roe.py workpapers/analysis.json --target 公司代码 --peers 同行代码1 同行代码2 同行代码3 --out workpapers/roe-assessment.json
 python3 <skill-dir>/scripts/render_report.py report.json --out 公司_期间_财务研究报告.html
 python3 <skill-dir>/scripts/selftest.py
+python3 <skill-dir>/scripts/selftest_main_report.py
+python3 <skill-dir>/scripts/selftest_routing.py
 ```
 calculate_financial_ratios只用标准库，存在openpyxl则额外输出Excel，否则完整CSV+JSON仍可复核；不为其索取不存在的权限。返回码2表示有FAIL，文件仍保留用于修正。NOT_TESTED表示缺资料不能勾稽，不是PASS。
 render_report用标准库生成内嵌SVG和数据表，不联网。实际渲染使用当前环境可用浏览器/文档工具，检查图表和摘要页；不需要把报告发布成网站。

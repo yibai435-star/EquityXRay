@@ -33,7 +33,7 @@
           "labels": [],
           "series": [
             {
-              "name": "公司",
+              "name": "扣非ROE",
               "refs": [],
               "scale": 100
             }
@@ -84,13 +84,13 @@
         {
           "title": "填写能被证据支持的图题",
           "type": "line",
-          "unit": "%",
+          "unit": "金额：填统一单位",
           "labels": [],
           "series": [
             {
-              "name": "公司",
+              "name": "营业收入",
               "refs": [],
-              "scale": 100
+              "scale": 1
             }
           ],
           "conclusion": {
@@ -143,7 +143,7 @@
           "labels": [],
           "series": [
             {
-              "name": "公司",
+              "name": "毛利率",
               "refs": [],
               "scale": 100
             }
@@ -198,7 +198,7 @@
           "labels": [],
           "series": [
             {
-              "name": "公司",
+              "name": "销售净利率",
               "refs": [],
               "scale": 100
             }
@@ -249,13 +249,13 @@
         {
           "title": "填写能被证据支持的图题",
           "type": "line",
-          "unit": "%",
+          "unit": "次",
           "labels": [],
           "series": [
             {
-              "name": "公司",
+              "name": "总资产周转率",
               "refs": [],
-              "scale": 100
+              "scale": 1
             }
           ],
           "conclusion": {
@@ -304,13 +304,13 @@
         {
           "title": "填写能被证据支持的图题",
           "type": "line",
-          "unit": "%",
+          "unit": "倍",
           "labels": [],
           "series": [
             {
-              "name": "公司",
+              "name": "现金及等价物/带息债务",
               "refs": [],
-              "scale": 100
+              "scale": 1
             }
           ],
           "conclusion": {
@@ -359,13 +359,13 @@
         {
           "title": "填写能被证据支持的图题",
           "type": "line",
-          "unit": "%",
+          "unit": "金额：填统一单位",
           "labels": [],
           "series": [
             {
-              "name": "公司",
+              "name": "经营现金流",
               "refs": [],
-              "scale": 100
+              "scale": 1
             }
           ],
           "conclusion": {
@@ -410,49 +410,11 @@
           "source_ids": []
         }
       ],
-      "charts": [
-        {
-          "title": "填写能被证据支持的图题",
-          "type": "line",
-          "unit": "%",
-          "labels": [],
-          "series": [
-            {
-              "name": "公司",
-              "refs": [],
-              "scale": 100
-            }
-          ],
-          "conclusion": {
-            "text": "填写有证据的结论",
-            "kind": "财务事实",
-            "refs": [],
-            "source_ids": []
-          },
-          "how_to_read": "说明轴和系列",
-          "findings": [
-            {
-              "text": "填写有证据的结论",
-              "kind": "财务事实",
-              "refs": [],
-              "source_ids": []
-            }
-          ],
-          "interpretation": {
-            "text": "填写证据与替代解释",
-            "kind": "分析推断",
-            "refs": [],
-            "source_ids": []
-          },
-          "drilldown": {
-            "needed": true,
-            "next": "填写下一层具体指标"
-          }
-        }
-      ],
+      "charts": [],
       "status": "数据不足",
       "status_reason": "待核实",
-      "drilldown": []
+      "drilldown": [],
+      "data_gap": "本节使用有来源证据矩阵；采用通用工具完成后嵌入图，不保留占位说明"
     },
     {
       "id": "business_strategy",
@@ -465,52 +427,109 @@
           "source_ids": []
         }
       ],
-      "charts": [
-        {
-          "title": "填写能被证据支持的图题",
-          "type": "line",
-          "unit": "%",
-          "labels": [],
-          "series": [
-            {
-              "name": "公司",
-              "refs": [],
-              "scale": 100
-            }
-          ],
-          "conclusion": {
-            "text": "填写有证据的结论",
-            "kind": "财务事实",
-            "refs": [],
-            "source_ids": []
-          },
-          "how_to_read": "说明轴和系列",
-          "findings": [
-            {
-              "text": "填写有证据的结论",
-              "kind": "财务事实",
-              "refs": [],
-              "source_ids": []
-            }
-          ],
-          "interpretation": {
-            "text": "填写证据与替代解释",
-            "kind": "分析推断",
-            "refs": [],
-            "source_ids": []
-          },
-          "drilldown": {
-            "needed": true,
-            "next": "填写下一层具体指标"
-          }
-        }
-      ],
+      "charts": [],
       "status": "数据不足",
       "status_reason": "待核实",
-      "drilldown": []
+      "drilldown": [],
+      "data_gap": "本节使用有来源证据矩阵；采用通用工具完成后嵌入图，不保留占位说明"
     }
   ],
   "appendix_tables": [],
   "questions": [],
-  "extra_data": []
+  "extra_data": [],
+  "contract_version": 2,
+  "target_ticker": "待填写",
+  "target_record_ids": [],
+  "main_report_coverage": {
+    "roe_adjusted": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "revenue": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "sales_cash_ratio": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "gross_margin": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "net_margin": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "net_profit_cash_content": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "adjusted_profit_share": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "asset_turnover": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "industry_turnover": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "cash_equiv_to_interest_debt": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "cfo": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "simple_fcf": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "capex_cash": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "gross_margin_peers": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    },
+    "asset_turnover_peers": {
+      "status": "unavailable",
+      "refs": [],
+      "reason": "待获取并核实数据，不能交付占位文本"
+    }
+  },
+  "roe_assessment": {
+    "workpaper": "workpapers/roe-assessment.json",
+    "quality": {
+      "text": "待根据杜邦、收现、现金利润指标解释赚钱机制",
+      "kind": "分析推断",
+      "refs": [],
+      "source_ids": []
+    },
+    "stability_comment": {
+      "text": "待基于近5年扣非ROE解释稳定性",
+      "kind": "分析推断",
+      "refs": [],
+      "source_ids": []
+    }
+  }
 }

@@ -19,6 +19,10 @@ def div(a, b):
     return a / b if number(a) and number(b) and b > 0 else None
 
 
+def signed_div(a, b):
+    return a / b if number(a) and number(b) and b != 0 else None
+
+
 def mean(a, b):
     return (a + b) / 2 if number(a) and number(b) else None
 
@@ -38,6 +42,12 @@ LABELS = {
     'net_debt': '净债务', 'net_cash': '净现金', 'roa_net_profit': 'ROA（净利润口径）', 'simple_fcf': '简化自由现金流', 'cash_conversion': 'OCF/合并净利润',
     'interest_coverage': '利息覆盖（分析EBIT）', 'effective_tax_rate': '有效税率',
     'revenue_yoy': '营业收入同比', 'ar_yoy': '应收账款同比', 'inventory_yoy': '存货同比',
+    'sales_cash_ratio': '现金收入比率（销售收现比）',
+    'net_profit_cash_content': '净利润现金含量',
+    'adjusted_profit_share': '扣非归母/归母净利润（有符号）',
+    'roe_adjusted_parent': '自算扣非归母ROE',
+    'dupont_adjusted_parent': '扣非归母杜邦ROE',
+    'cash_equiv_to_interest_debt': '现金及现金等价物/带息债务',
 }
 
 
@@ -111,6 +121,8 @@ def analyze(data):
     for r in data['records']:
         rid, cells = r['id'], r['values']
         vals = {k: c['value'] for k, c in cells.items()}
+        adjustment_verified = (r.get('adjusted_profit_basis') in ['disclosed_nonrecurring', 'analyst_reconciled']
+                               and bool(r.get('adjustment_policy_id')))
         m = {}
         by_metrics[rid] = m
         days = (date.fromisoformat(r['period_end']) - date.fromisoformat(r['period_start'])).days + 1
@@ -150,7 +162,17 @@ def analyze(data):
 
         gp = add('gross_profit', arithmetic(['revenue', 'cogs'], [1, -1]), ['revenue', 'cogs'], 'revenue - cogs', r['unit'])
         for key, num in [('gross_margin', 'gross_profit'), ('net_margin', 'net_profit'), ('parent_margin', 'parent_profit'), ('adjusted_parent_margin', 'adjusted_parent_profit')]:
-            add(key, div(gp if num == 'gross_profit' else raw(num), raw('revenue')), [mid('gross_profit') if num == 'gross_profit' else num, 'revenue'], f'{num} / revenue')
+            numerator = gp if num == 'gross_profit' else raw(num)
+            if num == 'adjusted_parent_profit' and not adjustment_verified:
+                numerator = None
+            add(key, div(numerator, raw('revenue')), [mid('gross_profit') if num == 'gross_profit' else num, 'revenue'], f'{num} / revenue',
+                note='扣非需已披露或完整分析调整及adjustment_policy_id；Non-GAAP不能替代' if num == 'adjusted_parent_profit' else '')
+        add('sales_cash_ratio', div(raw('sales_cash_received'), raw('revenue')),
+            ['sales_cash_received', 'revenue'], 'sales_cash_received / revenue',
+            note='实际销售收现，可能含VAT/预收/上期回款；不可用CFO代替')
+        add('adjusted_profit_share', signed_div(raw('adjusted_parent_profit'), raw('parent_profit')) if adjustment_verified else None,
+            ['adjusted_parent_profit', 'parent_profit'], 'adjusted_parent_profit / parent_profit; signed nonzero denominator',
+            note='同归母口径；亏损、跨正负、近零分母不作质量评级；分析调整另标')
         for key in ['selling_expense', 'admin_expense', 'rd_expense', 'financial_expense', 'capex_cash']:
             add(key + '_ratio', div(raw(key), raw('revenue')), [key, 'revenue'], f'{key} / revenue')
         for key in ['total_assets', 'total_equity', 'parent_equity', 'ar', 'inventory', 'trade_payables', 'fixed_assets']:
@@ -166,6 +188,16 @@ def analyze(data):
             ek = 'equity_multiplier' if suffix == 'total' else 'parent_equity_multiplier'
             add(ek, div(m['avg_total_assets'], avg), [mid('avg_total_assets'), mid('avg_' + base)], f'avg_total_assets / avg_{base}; require both equity endpoints > 0', 'times')
         add('asset_turnover', div(raw('revenue'), m['avg_total_assets']), ['revenue', mid('avg_total_assets')], 'revenue / avg_total_assets', 'times_in_period')
+        p_open, p_close = raw('parent_equity_open'), raw('parent_equity_close')
+        valid_adjusted_equity = number(p_open) and number(p_close) and min(p_open, p_close) > 0
+        adjusted_roe = div(raw('adjusted_parent_profit'), m['avg_parent_equity']) if adjustment_verified and valid_adjusted_equity else None
+        add('roe_adjusted_parent', adjusted_roe, ['adjusted_parent_profit', mid('avg_parent_equity')],
+            'adjusted_parent_profit / avg_parent_equity; verified nonrecurring adjustment and positive endpoints',
+            note='分析调整ROE，非披露法定扣非ROE' if r.get('adjusted_profit_basis') == 'analyst_reconciled' else '自算平均归母权益扣非ROE，非加权披露ROE')
+        d_adjusted = add('dupont_adjusted_parent', product([m['adjusted_parent_margin'], m['asset_turnover'], m['parent_equity_multiplier']]),
+            [mid('adjusted_parent_margin'), mid('asset_turnover'), mid('parent_equity_multiplier')],
+            'adjusted_parent_margin * asset_turnover * parent_equity_multiplier')
+        check('dupont_adjusted_parent', d_adjusted, adjusted_roe)
         for suffix, margin, em in [('total', 'net_margin', 'equity_multiplier'), ('parent', 'parent_margin', 'parent_equity_multiplier')]:
             d = add('dupont_' + suffix, product([m[margin], m['asset_turnover'], m[em]]), [mid(margin), mid('asset_turnover'), mid(em)], f'{margin} * asset_turnover * {em}')
             check('dupont_' + suffix, d, m['roe_' + suffix], 'Analytical average-balance ROE, not reported weighted ROE')
@@ -182,13 +214,18 @@ def analyze(data):
         add('net_debt', arithmetic(['interest_debt_close', 'available_cash_close'], [1, -1]), ['interest_debt_close', 'available_cash_close'], 'interest_debt_close - available_cash_close', r['unit'])
         add('net_cash', -m['net_debt'] if m['net_debt'] is not None else None, [mid('net_debt')], '-net_debt', r['unit'])
         add('debt_to_available_cash', div(raw('interest_debt_close'), raw('available_cash_close')), ['interest_debt_close', 'available_cash_close'], 'interest_debt_close / available_cash_close', 'times')
+        add('cash_equiv_to_interest_debt', div(raw('cash_equiv_close'), raw('interest_debt_close')),
+            ['cash_equiv_close', 'interest_debt_close'], 'cash_equiv_close / interest_debt_close', 'times',
+            '使用明确现金及等价物，排除广义现金头寸；零债务为不适用，不是无限大评分')
         ebit = add('ebit_analytical', arithmetic(['profit_before_tax', 'interest_expense'], [1, 1]), ['profit_before_tax', 'interest_expense'], 'profit_before_tax + expensed_interest; includes nonoperating items', r['unit'])
         add('interest_coverage', div(ebit, raw('interest_expense')), [mid('ebit_analytical'), 'interest_expense'], 'ebit_analytical / interest_expense', 'times')
         add('effective_tax_rate', div(raw('income_tax'), raw('profit_before_tax')), ['income_tax', 'profit_before_tax'], 'income_tax / profit_before_tax')
         add('cash_conversion', div(raw('cfo'), raw('net_profit')), ['cfo', 'net_profit'], 'cfo / consolidated_net_profit; positive denominator only', 'times', '微利分母仍需人工判断，不能据比率机械评级')
+        add('net_profit_cash_content', m['cash_conversion'], [mid('cash_conversion')],
+            'cash_conversion; alias, computed once', 'times', '合并CFO配合并净利；亏损/零利润N/M，微利不机械评级')
         add('simple_fcf', arithmetic(['cfo', 'capex_cash'], [1, -1]), ['cfo', 'capex_cash'], 'cfo - cash_capex; not automatically FCFF', r['unit'])
         add('ocf_profit_gap', arithmetic(['cfo', 'net_profit'], [1, -1]), ['cfo', 'net_profit'], 'cfo - consolidated_net_profit', r['unit'])
-        add('parent_adjustment_gap', arithmetic(['parent_profit', 'adjusted_parent_profit'], [1, -1]), ['parent_profit', 'adjusted_parent_profit'], 'parent_profit - adjusted_parent_profit', r['unit'])
+        add('parent_adjustment_gap', arithmetic(['parent_profit', 'adjusted_parent_profit'], [1, -1]) if adjustment_verified else None, ['parent_profit', 'adjusted_parent_profit'], 'parent_profit - adjusted_parent_profit', r['unit'])
         add('goodwill_equity', div(raw('goodwill_close'), raw('total_equity_close')), ['goodwill_close', 'total_equity_close'], 'goodwill_close / total_equity_close')
         check('balance_sheet', raw('total_assets_close'), arithmetic(['total_liabilities_close', 'total_equity_close'], [1, 1]))
         check('profit_attribution', raw('net_profit'), arithmetic(['parent_profit', 'minority_profit'], [1, 1]))
@@ -240,11 +277,15 @@ def analyze(data):
                        status='computed' if ratio is not None else 'unavailable', note='Low base requires analyst review')
             nodes[row['id']] = row
             metric_rows.append(row)
-        for basis, margin, em in [('total', 'net_margin', 'equity_multiplier'), ('parent', 'parent_margin', 'parent_equity_multiplier')]:
+        for basis, margin, em in [('total', 'net_margin', 'equity_multiplier'), ('parent', 'parent_margin', 'parent_equity_multiplier'),
+                                  ('adjusted_parent', 'adjusted_parent_margin', 'parent_equity_multiplier')]:
             keys = [margin, 'asset_turnover', em]
             before = [by_metrics[p['id']][k] for k in keys]
             after = [by_metrics[r['id']][k] for k in keys]
-            contributions = shapley(before, after)
+            policy_comparable = (basis != 'adjusted_parent' or
+                                 (r.get('adjustment_policy_id') == p.get('adjustment_policy_id') and
+                                  r.get('adjusted_profit_basis') == p.get('adjusted_profit_basis')))
+            contributions = shapley(before, after) if policy_comparable else None
             for i, k in enumerate(keys):
                 deps = [f'{rid}:metric:{metric}' for rid in [p['id'], r['id']] for metric in keys]
                 row = dict(id=f'{r["id"]}:metric:roe_{basis}_contribution_{k}', record_id=r['id'],

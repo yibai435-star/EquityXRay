@@ -238,10 +238,81 @@ class Renderer:
         svg=f'<svg class="chart" viewBox="0 0 {width} {height}" role="img" aria-label="{E(spec["title"])}" xmlns="http://www.w3.org/2000/svg"><title>{E(spec["title"])}</title><rect width="100%" height="100%" fill="white"/><g font-family="Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif">'+''.join(shapes)+'</g></svg>'
         return svg,self.table(headers,rows),refs
 
+    def validate_main_contract(self):
+        r = self.report
+        ids = r.get('target_record_ids', [])
+        records = {x['id']: x for x in self.wp['records']}
+        if len(set(ids)) != len(ids) or any(i not in records for i in ids):
+            raise ValueError('Invalid target record selection')
+        target = r.get('target_ticker')
+        chosen = [records[i] for i in ids]
+        if not chosen or any(x['ticker'] != target or x['period_type'] != 'FY' for x in chosen):
+            raise ValueError('Main report requires target FY records')
+        if len(ids) < 3 and not r.get('history_gap'):
+            raise ValueError('Explain why fewer than three historical years are available')
+        if [x['period_end'] for x in chosen] != sorted(x['period_end'] for x in chosen):
+            raise ValueError('Target history must be in chronological order')
+        if any(int(b['period_end'][:4]) != int(a['period_end'][:4])+1 for a,b in zip(chosen,chosen[1:])) and not r.get('history_gap'):
+            raise ValueError('Explain discontinuous target years')
+        required = {
+            'roe_adjusted': ['roe_adjusted_parent', 'roe_adjusted_reported'],
+            'revenue': ['revenue'], 'sales_cash_ratio': ['sales_cash_ratio'],
+            'gross_margin': ['gross_margin'], 'net_margin': ['net_margin'],
+            'net_profit_cash_content': ['net_profit_cash_content'],
+            'adjusted_profit_share': ['adjusted_profit_share'], 'asset_turnover': ['asset_turnover'],
+            'industry_turnover': ['inventory_turnover', 'ar_turnover'],
+            'cash_equiv_to_interest_debt': ['cash_equiv_to_interest_debt'],
+            'cfo': ['cfo'], 'simple_fcf': ['simple_fcf'], 'capex_cash': ['capex_cash'],
+            'gross_margin_peers': ['gross_margin'], 'asset_turnover_peers': ['asset_turnover']}
+        coverage = r.get('main_report_coverage', {})
+        for key, metrics in required.items():
+            item = coverage.get(key, {})
+            status = item.get('status'); refs = item.get('refs', [])
+            if status not in ['available', 'partial', 'unavailable', 'not_applicable']:
+                raise ValueError('Missing main report coverage: '+key)
+            if status != 'available' and not item.get('reason'):
+                raise ValueError('Explain missing/inapplicable coverage: '+key)
+            if key == 'industry_turnover' and not item.get('reason'):
+                raise ValueError('Explain business model and industry turnover choice')
+            for ref in refs:
+                self.value(ref)
+                if ref.split(':')[-1] not in metrics:
+                    raise ValueError('Incorrect metric in coverage: '+key)
+            if status in ['available', 'partial'] and not refs:
+                raise ValueError('Available/partial coverage requires data refs: '+key)
+            if key.endswith('_peers'):
+                usable = [self.nodes[ref] for ref in refs if finite(self.value(ref))]
+                if any(n['ticker'] == target for n in usable):
+                    raise ValueError('Peer comparison must exclude target')
+                windows = {(n['period_start'], n['period_end'], n['period_type']) for n in usable}
+                if usable and (len(windows) != 1 or next(iter(windows))[2] != 'FY'):
+                    raise ValueError('Peer metrics must use one common FY')
+                target_windows = {(x['period_start'], x['period_end'], x['period_type']) for x in chosen}
+                if not windows.issubset(target_windows):
+                    raise ValueError('Peer comparison must match a selected target fiscal year')
+                if status == 'available' and not 3 <= len({n['ticker'] for n in usable}) <= 5:
+                    raise ValueError('Main report needs 3–5 comparable peers: '+key)
+            else:
+                if any(self.nodes[ref]['record_id'] not in ids for ref in refs):
+                    raise ValueError('History coverage must use selected target records')
+                if status == 'available':
+                    if {self.nodes[ref]['record_id'] for ref in refs} != set(ids) or any(self.value(ref) is None for ref in refs):
+                        raise ValueError('Available coverage must span every selected year: '+key)
+        spec = r.get('roe_assessment', {})
+        saved = json.loads((self.base / spec['workpaper']).read_text(encoding='utf-8'))
+        from assess_adjusted_roe import assess
+        actual = assess(self.wp, target, saved['peers'], saved['basis'], [int(x['period_end'][:4]) for x in chosen])
+        if saved != actual:
+            raise ValueError('Adjusted ROE assessment must be recalculated from current workpapers')
+        self.assessment = actual
+        self.statement(spec['quality']); self.statement(spec['stability_comment'])
+
     def render(self):
         r=self.report; mode=r['mode']; sections=r['sections'];summary=r['summary']
         if mode not in ['full','quick','deep','compare']:
             raise ValueError('Invalid mode')
+        if mode in ['full', 'quick'] and r.get('contract_version', 2) >= 2:
+            self.validate_main_contract()
         if mode=='full' and [s['id'] for s in sections] != SECTION_IDS:
             raise ValueError('Full report requires nine ordered sections')
         if mode=='quick' and not 5<=sum(len(s.get('charts',[])) for s in sections)<=8:
@@ -277,8 +348,23 @@ class Renderer:
             if s.get('drilldown'):
                 body+='<h3>【进一步拆解】</h3>'+self.list_statements(s['drilldown'])
             body+='</section>'
-        body+='<section id="questions"><h2>10. 待验证问题</h2><ol>'+''.join('<li>'+E(q)+'</li>' for q in r['questions'])+'</ol></section>'
+        if hasattr(self, 'assessment'):
+            a = self.assessment; spec = r['roe_assessment']; st = a['stability']
+            score = str(a['score'])+'/100' if a['score'] is not None else '数据不足，暂不评分'
+            stable = (f"{st['period_start']}至{st['period_end']}，{st['years']}年；首尾变化{st['change_pp']:.2f}pct；标准差{st['std_pp']:.2f}pct；正ROE年份{st['positive_years']}/{st['years']}" if st else '扣非历史数据不足')
+            assessment_label = '分析调整ROE' if a.get('profit_basis') == 'analyst_reconciled' else '扣非ROE'
+            body+='<section id="roe-assessment"><h2>10. '+E(assessment_label)+'综合评估</h2>'+self.table(['维度','结果'],[['分数（同行相对位置）',score],['质量（赚钱机制）',spec['quality']['text']],['稳定性',stable]])
+            body+='<p>'+E(a['interpretation'])+'</p>'
+            if st:body+='<p>'+E(st['coverage_note'])+'</p>'
+            body+=self.list_statements([spec['quality'],spec['stability_comment']])
+            if a['limitations']:body+='<p class="gap">'+E('；'.join(a['limitations']))+'</p>'
+            body+=self.table(['财年','公司'+assessment_label+'（%）','同行相对分'],[[row['period_end'],None if row['target']['value'] is None else row['target']['value']*100,row['score']] for row in a['annual']])+'</section>'
+        body+='<section id="questions"><h2>11. 待验证问题</h2><ol>'+''.join('<li>'+E(q)+'</li>' for q in r['questions'])+'</ol></section>'
         body+='<section id="appendix"><h2>数据附录</h2>'
+        if hasattr(self, 'assessment'):
+            labels = {'roe_adjusted':'扣非ROE','revenue':'营业收入','sales_cash_ratio':'现金收入比率','gross_margin':'毛利率','net_margin':'销售净利率','net_profit_cash_content':'净利润现金含量','adjusted_profit_share':'扣非归母/归母','asset_turnover':'总资产周转率','industry_turnover':'行业周转指标','cash_equiv_to_interest_debt':'现金等价物/有息债务','cfo':'经营现金流','simple_fcf':'自由现金流','capex_cash':'资本开支','gross_margin_peers':'毛利率同行比较','asset_turnover_peers':'总资产周转同行比较'}
+            statuses = {'available':'已核实','partial':'部分数据缺失','unavailable':'数据不足','not_applicable':'不适用'}
+            body+='<h3>主报告必查指标与缺口</h3>'+self.table(['指标','覆盖状态','依据/限制'],[[labels.get(k,k),statuses[v['status']],v.get('reason') or str(len(v.get('refs',[])))+'个已引用数据点'] for k,v in r['main_report_coverage'].items()])
         for table in r['appendix_tables']:
             body+='<h3>'+E(table['title'])+'</h3>'+self.table(table['columns'],table['rows'])
         body+='<h3>数据来源</h3><ol class="sources">'

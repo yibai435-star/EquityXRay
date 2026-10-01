@@ -17,7 +17,10 @@ def route_request(request):
     result=[]
     for step in steps:
         chosen=None
-        for rule in spec['regression_rules']:
+        rules = spec['regression_rules']
+        if re.search(r'(财报分析报告|财务分析报告|财务体检|过去.*年.*财报)', step) and not re.search(r'DCF|更新.*模型', step, re.I):
+            rules = sorted(rules, key=lambda r: r['skill'] != 'financial-statement-analysis')
+        for rule in rules:
             if re.search(rule['pattern'],step,re.I):
                 mode=rule['mode']
                 for override in rule.get('mode_overrides',[]):

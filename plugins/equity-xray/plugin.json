@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "equity-xray",
-  "version": "0.1.0",
-  "description": "Evidence-first equity research that turns public filings into traceable financial diagnostics, comps, DCF and model updates.",
+  "version": "0.2.0",
+  "description": "Understand a listed company through a traceable multi-year financial report, with adjusted ROE, cash quality and peer comparisons.",
   "author": {
     "name": "yibai435-star"
   },
@@ -20,8 +20,8 @@
     "com.openai": {
       "interface": {
         "displayName": "EquityXRay",
-        "shortDescription": "上市公司财务、业绩、同行、DCF与模型更新",
-        "longDescription": "降低研究门槛，不降低研究标准：从财务体检出发递归拆解异常，并衔接季度业绩、同行比较、DCF估值和模型更新。",
+        "shortDescription": "用财报、现金流和同行图表初步了解上市公司",
+        "longDescription": "主报告覆盖近3–5年扣非ROE、增长收现、盈利、周转、债务覆盖及回报稳定性；需要时独立调用业绩、同行、DCF与模型更新。",
         "developerName": "yibai435-star",
         "category": "Productivity",
         "capabilities": [

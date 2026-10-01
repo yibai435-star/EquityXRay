@@ -3,7 +3,7 @@
   "modules": [
     {
       "name": "financial-statement-analysis",
-      "intent": "multi_year_financial_health_or_metric_deep_dive",
+      "intent": "initial_multi_year_financial_report_or_explicit_metric_deep_dive",
       "modes": [
         "full",
         "quick",
@@ -54,7 +54,7 @@
     "financial_health"
   ],
   "unknown": "clarify_after_useful_work",
-  "semantic_router": "Interpret intent, negation, context and authorized scope; script is a bounded regression helper, not the semantic authority.",
+  "semantic_router": "Interpret intent, negation, context and authorized scope; script is a bounded regression helper, not the semantic authority. Main financial reports may contain internal peer or earnings tasks without changing the deliverable.",
   "regression_rules": [
     {
       "skill": "model-update",
